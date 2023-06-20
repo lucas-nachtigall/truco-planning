@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 export const sessionList : SessionInterface[] = [];
 export class SessionService {
 
-    async createSession(req : CreateSessionRequest) : Promise<SessionInterface[]> {
+    async createSession(req : CreateSessionRequest) : Promise<SessionInterface> {
 
         const newSession : SessionInterface = {
             sessionId : uuidv4(),
@@ -15,7 +15,7 @@ export class SessionService {
         }
         sessionList.push(newSession);
 
-        return sessionList;
+        return newSession;
     }
 
 }
