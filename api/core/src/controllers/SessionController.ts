@@ -12,4 +12,17 @@ export class SessionController {
 
         return res.status(201).json(result);
     }
+    async getSessionById(req:Request,res:Response){
+
+        try{
+            const sessionId = req.params.sessionId;
+
+            const result = await service.getSessionById(sessionId).catch()
+
+            return res.status(201).json(result);
+        }
+        catch (error){
+            res.status(404).send("Session not found");
+        }
+    }
 }
