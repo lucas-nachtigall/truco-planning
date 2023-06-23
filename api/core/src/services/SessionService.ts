@@ -18,4 +18,18 @@ export class SessionService {
         return newSession;
     }
 
+    async getSessionById(sessionId : string) : Promise<SessionInterface> {
+
+        const session = sessionList.find(session => session.sessionId === sessionId);
+
+        if(session){
+            return session;
+        }
+        else{
+            console.log("Session not found")
+            return Promise.reject("Session not found");
+        }
+    }
+
 }
+
