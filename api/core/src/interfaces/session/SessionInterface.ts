@@ -1,8 +1,9 @@
 import {UserInterface} from "../user/UserInterface";
+import {VotingSystemInterface} from "../votingSystem/VotingSystemInterface";
 
 export interface SessionInterface {
     sessionId: string,
     sessionName: string,
-    sessionSystem: string;
+    sessionSystem: VotingSystemInterface;
     userList : UserInterface[]
 }
