@@ -1,4 +1,4 @@
 export interface CreateSessionRequest {
     name: string;
-    votingSystem : string
+    votingSystemId : number
 }
