@@ -11,7 +11,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 
 app.use(cors({
-  origin: '*'
+  origin: ['https://trucoplanning.bohr.io', 'http://localhost:5173']
 }));
 
 app.use('/', routes)
