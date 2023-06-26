@@ -10,13 +10,10 @@ const Pusher = require('pusher');
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 
-// Configuração do CORS
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  next();
-});
+app.use(cors({
+  origin: '*'
+}));
 
-app.use(cors());
 app.use('/', routes)
 
 export const pusher = new Pusher({
