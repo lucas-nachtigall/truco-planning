@@ -4,15 +4,10 @@ import {routes} from "./routes";
 const app = express();
 const port = process.env.PORT || 3000;
 const bodyParser = require('body-parser')
-const cors = require('cors');
 const Pusher = require('pusher');
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
-
-app.use(cors({
-  origin: ['https://trucoplanning.bohr.io', 'http://localhost:5173']
-}));
 
 app.use('/', routes)
 
