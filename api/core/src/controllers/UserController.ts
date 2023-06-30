@@ -17,4 +17,17 @@ export class UserController{
         }
 
     }
+
+    async userVoted(req : Request,res:Response) {
+        const body = req.body;
+
+        try {
+            const result =  await userService.userVoted(body)
+            return res.status(201).json(result);
+
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
 }
