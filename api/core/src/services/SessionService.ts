@@ -9,18 +9,23 @@ const votingSystemService = new VotingSystemService();
 export class SessionService {
 
     async createSession(req : CreateSessionRequest) : Promise<SessionInterface> {
+        console.log("Started: Session Creation Flow")
+        console.log("req ->")
+        console.log(req)
         try{
             const votingSystem = await votingSystemService.getVotingSystem(req.votingSystemId);
 
             if(votingSystem){
+                console.log("Voting System found")
                 const newSession : SessionInterface = {
                     sessionId : uuidv4(),
-                    sessionName : req.name,
+                    roomName : req.name,
                     sessionSystem : votingSystem,
                     userList : []
                 }
                 sessionList.push(newSession);
-
+                console.log("Session Created:")
+                console.log(newSession)
                 return newSession;
             }
             else{

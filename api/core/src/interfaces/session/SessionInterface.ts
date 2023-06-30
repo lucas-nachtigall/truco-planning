@@ -3,7 +3,7 @@ import {VotingSystemInterface} from "../votingSystem/VotingSystemInterface";
 
 export interface SessionInterface {
     sessionId: string,
-    sessionName: string,
+    roomName: string,
     sessionSystem: VotingSystemInterface;
     userList : UserInterface[]
 }
