@@ -18,7 +18,6 @@ export const possibleSystems : VotingSystemInterface[] = [Basic,Fibonacci];
 export class VotingSystemService {
 
     async getVotingSystem(id:number) {
-        console.log(possibleSystems)
         return possibleSystems.find(sys=> sys.id === id);
     }
 }
