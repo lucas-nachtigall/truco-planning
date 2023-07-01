@@ -4,6 +4,7 @@ import {v4 as uuidv4} from 'uuid';
 import {sessionList} from "./SessionService";
 import {pusher} from "../server";
 import {UserVoteRequest} from "../dtos/user/UserVoteRequest";
+import {UserRemoveRequest} from "../dtos/user/UserRemoveRequest";
 
 export class UserService {
 
@@ -30,6 +31,29 @@ export class UserService {
         }
 
         return newUser
+    }
+    async removeUser(req: UserRemoveRequest) {
+        console.log("-----------------------REMOVE-USER----------------------")
+
+        const sessionFound = sessionList.find((obj) => {
+            return obj.sessionId === req.sessionId;
+        });
+
+        if (sessionFound) {
+            const userFound = sessionFound.userList.find((obj)=> {
+                return obj.userId === req.userId;
+            });
+
+            if(userFound){
+                console.log("User Found", userFound)
+                sessionFound.userList = sessionFound.userList.filter(user=> user.userId !== userFound.userId);
+
+                await pusher.trigger('session_' + req.sessionId, 'user_created', sessionFound.userList);
+
+                console.log("User list final", sessionFound.userList)
+            }
+        }
+
     }
 
     async userVoted(req : UserVoteRequest){
