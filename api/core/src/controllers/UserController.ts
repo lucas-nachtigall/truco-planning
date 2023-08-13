@@ -18,6 +18,19 @@ export class UserController{
 
     }
 
+    async removeUser(req : Request,res:Response) {
+        const body = req.body;
+
+        try {
+            const result =  await userService.removeUser(body)
+            return res.status(201).json(result);
+
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
     async userVoted(req : Request,res:Response) {
         const body = req.body;
 
