@@ -24,14 +24,19 @@ app.get("/", function (req: Request, res: Response) {
   res.send("Bohr Express template");
 });
 
-app.post("/pusher/auth", (req, res) => {
+app.post("/pusher/auth", function (req, res) {
   const socketId = req.body.socket_id;
   const channel = req.body.channel_name;
+  const id = req.body.id;
+
+  const presenceData = {
+    user_id: id,
+    user_info: { user_id: id},
+  };
   // This authenticates every user. Don't do this in production!
-  const authResponse = pusher.authorizeChannel(socketId, channel);
+  const authResponse = pusher.authorizeChannel(socketId, channel, presenceData);
   res.send(authResponse);
 });
-
 
 if (!module.parent) {
   app.listen(port);
