@@ -5,8 +5,8 @@ const app = express();
 const port = process.env.PORT || 3000;
 const bodyParser = require('body-parser')
 const Pusher = require('pusher');
-const cors = require('cors');
-app.use(cors())
+// const cors = require('cors');
+// app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 
