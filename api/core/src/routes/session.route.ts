@@ -6,5 +6,7 @@ const sessionRoute = Router();
 
 sessionRoute.post('/', controller.createSession);
 sessionRoute.get('/:sessionId', controller.getSessionById);
+sessionRoute.patch('/reveal', controller.voteReveal);
+sessionRoute.patch('/reset', controller.reset);
 
 export {sessionRoute};
