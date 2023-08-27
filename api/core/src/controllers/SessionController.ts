@@ -25,4 +25,28 @@ export class SessionController {
             res.status(404).send("Session not found");
         }
     }
+
+    async voteReveal(req:Request,res:Response){
+
+        try{
+            const result = await service.voteReveal(req.body).catch()
+
+            return res.status(201).json(result);
+        }
+        catch (error){
+            res.status(404).send("Vote Reveal Failed");
+        }
+    }
+
+    async reset(req:Request,res:Response){
+
+        try{
+            const result = await service.reset(req.body).catch()
+
+            return res.status(201).json(result);
+        }
+        catch (error){
+            res.status(404).send("Reset failed");
+        }
+    }
 }
