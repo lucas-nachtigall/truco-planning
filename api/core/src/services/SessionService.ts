@@ -6,6 +6,8 @@ import { v4 as uuidv4 } from 'uuid';
 import {VotingSystemService} from "./VotingSystemService";
 import {pusher} from "../server";
 import {SessionDTO} from "../dtos/session/SessionDTO";
+import {prisma} from "../prisma/client";
+import {AppError} from "../errors/AppError";
 
 export const sessionList : SessionInterface[] = [];
 
@@ -17,36 +19,69 @@ export class SessionService {
         console.log("req ->")
         console.log(req)
         try{
-            const votingSystem = await votingSystemService.getVotingSystem(req.votingSystemId);
+
+            const votingSystem = await prisma.votingSystem.findUnique({
+                where: {
+                    id: req.votingSystemId
+                },
+                include: {
+                    votingValues: true,
+                }
+            })
 
             if(votingSystem){
-                console.log("Voting System found")
-                const newSession : SessionInterface = {
-                    sessionId : uuidv4(),
-                    roomName : req.name,
-                    sessionSystem : votingSystem,
-                    userList : []
-                }
-                sessionList.push(newSession);
-                console.log("Session Created:")
-                console.log(newSession)
-                return newSession;
+
+                const newSession = await prisma.session.create({
+                    data: {
+                        sessionName : req.name,
+                        sessionKey : uuidv4(),
+                        votingSystemId : votingSystem.id
+                    }
+                })
+                return this.entityToResponse(votingSystem, newSession);
+
+
             }
             else{
                 return Promise.reject("Voting System not found")
             }
         }
         catch (error){
-            throw error;
+            throw new AppError("Error creating session")
         }
     }
 
-    async getSessionById(sessionId : string) : Promise<SessionInterface> {
+    private entityToResponse(votingSystem : any, newSession : any) {
+        const valueList: number[] = [];
+        [...votingSystem.votingValues.values()].forEach(value => valueList.push(value.intValue))
 
-        const session = sessionList.find(session => session.sessionId === sessionId);
+        const sessionResponse: SessionInterface = {
+            sessionId: newSession.sessionKey,
+            roomName: newSession.sessionName,
+            sessionSystem: {
+                id: votingSystem.id,
+                name: votingSystem.systemName,
+                values: valueList,
+                coffee: true
+            },
+            userList: []
+        }
+        return sessionResponse;
+    }
+
+    async getSessionById(sessionId : string) : Promise<SessionInterface> {
+        const session = await prisma.session.findFirst({
+            where: {
+                sessionKey: sessionId
+            },
+            include:{
+                votingSystem:true,
+                users:true
+            }
+        });
 
         if(session){
-            return session;
+            return this.entityToResponse(session.votingSystem,session)
         }
         else{
             console.log("Session not found")
