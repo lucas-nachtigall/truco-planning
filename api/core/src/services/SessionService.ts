@@ -74,10 +74,14 @@ export class SessionService {
             where: {
                 sessionKey: sessionId
             },
-            include:{
-                votingSystem:true,
-                users:true
-            }
+            include: {
+                users : true,
+                votingSystem: {
+                    include: {
+                        votingValues: true
+                    },
+                },
+            },
         });
 
         if(session){
