@@ -27,10 +27,11 @@ model Session {
 
 model User {
   id        Int      @id @default(autoincrement())
-  userName  String   @unique @map("user_name") @db.VarChar(150)
+  userName  String   @map("user_name") @db.VarChar(150)
   userKey   String   @map("user_key") @db.VarChar(150)
   createdAt DateTime @default(now()) @map("created_at")
   spectator Boolean  @default(false) @map("spectator") @db.TinyInt
+  userVote  Int?     @map("user_vote") @db.Int
 
   sessionId Int     @map("session_id") @db.Int
   session   Session @relation(fields: [sessionId], references: [id])

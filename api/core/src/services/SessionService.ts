@@ -8,6 +8,7 @@ import {pusher} from "../server";
 import {SessionDTO} from "../dtos/session/SessionDTO";
 import {prisma} from "../prisma/client";
 import {AppError} from "../errors/AppError";
+import {UserInterface} from "../interfaces/user/UserInterface";
 
 export const sessionList : SessionInterface[] = [];
 
@@ -70,7 +71,7 @@ export class SessionService {
     }
 
     async getSessionById(sessionId : string) : Promise<SessionInterface> {
-        const session = await prisma.session.findFirst({
+        const session = await prisma.session.findUnique({
             where: {
                 sessionKey: sessionId
             },
@@ -101,14 +102,31 @@ export class SessionService {
     }
 
     async reset(req : ResetRequest) {
-        let userList;
         console.log(req.sessionId)
-        const session = sessionList.find(session => session.sessionId === req.sessionId);
+        const session = await prisma.session.findUnique({
+            where : {
+                sessionKey: req.sessionId
+            },
+            include : {
+                users: true
+            }
+        })
 
-        console.log(session)
+        const userList : UserInterface[] = []
         if(session){
-            session.userList.map(user => user.vote = '')
-            userList = session.userList;
+
+            const usersAfterVoteReset = await prisma.user.updateMany({
+                where: { sessionId: session.id },
+                data: { userVote: null }
+            });
+
+            session.users.forEach(user => userList.push({
+                userId : user.userKey,
+                userName : user.userName,
+                spectator : user.spectator,
+                vote : "",
+                roomId : session.sessionKey
+            }))
         }
 
         await pusher.trigger('presence-session_' + req.sessionId, 'reset', userList);
