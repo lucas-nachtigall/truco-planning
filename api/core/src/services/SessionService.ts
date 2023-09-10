@@ -9,6 +9,7 @@ import {SessionDTO} from "../dtos/session/SessionDTO";
 import {prisma} from "../prisma/client";
 import {AppError} from "../errors/AppError";
 import {UserInterface} from "../interfaces/user/UserInterface";
+import {User} from "@prisma/client";
 
 export const sessionList : SessionInterface[] = [];
 
@@ -114,13 +115,12 @@ export class SessionService {
 
         const userList : UserInterface[] = []
         if(session){
-
             const usersAfterVoteReset = await prisma.user.updateMany({
                 where: { sessionId: session.id },
                 data: { userVote: null }
             });
 
-            session.users.forEach(user => userList.push({
+            session.users.forEach((user : User) => userList.push({
                 userId : user.userKey,
                 userName : user.userName,
                 spectator : user.spectator,

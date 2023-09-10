@@ -5,6 +5,7 @@ import {pusher} from "../server";
 import {UserVoteRequest} from "../dtos/user/UserVoteRequest";
 import {UserRemoveRequest} from "../dtos/user/UserRemoveRequest";
 import {prisma} from "../prisma/client";
+import {User} from "@prisma/client";
 
 export class UserService {
 
@@ -35,7 +36,7 @@ export class UserService {
             })
 
             const userList : UserInterface[] = []
-            found.users.forEach(user => userList.push({
+            found.users.forEach((user : User) => userList.push({
                 userId : user.userKey,
                 userName : user.userName,
                 spectator : user.spectator,
@@ -64,7 +65,7 @@ export class UserService {
         })
 
         if (sessionFound) {
-            const userFound = sessionFound.users.find((obj)=> {
+            const userFound = sessionFound.users.find((obj: User) => {
                 return obj.userKey === req.userId;
             });
 
@@ -75,7 +76,7 @@ export class UserService {
                 })
 
                 const userList : UserInterface[] = []
-                sessionFound.users.forEach(user => {
+                sessionFound.users.forEach((user : User) => {
                     if (user.id != userDeleted.id) {
                         userList.push({
                             userId: user.userKey,
@@ -107,7 +108,7 @@ export class UserService {
 
         if(sessionFound){
             console.log("Session Found", sessionFound)
-            const userFound = sessionFound.users.find((obj)=> {
+            const userFound = sessionFound.users.find((obj : User)=> {
                 return obj.userKey === req.userId;
             });
 
@@ -122,7 +123,7 @@ export class UserService {
                 console.log("User Found", userWithNewVote)
 
                 const userList : UserInterface[] = []
-                sessionFound.users.forEach(user => {
+                sessionFound.users.forEach((user : User) => {
                     if (user.id != userWithNewVote.id) {
                         userList.push({
                             userId: user.userKey,
