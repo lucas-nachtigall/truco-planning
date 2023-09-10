@@ -5,7 +5,6 @@ import {ResetRequest} from "../dtos/session/ResetRequest";
 import { v4 as uuidv4 } from 'uuid';
 import {VotingSystemService} from "./VotingSystemService";
 import {pusher} from "../server";
-import {SessionDTO} from "../dtos/session/SessionDTO";
 import {prisma} from "../prisma/client";
 import {AppError} from "../errors/AppError";
 import {UserInterface} from "../interfaces/user/UserInterface";
