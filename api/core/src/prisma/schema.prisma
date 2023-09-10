@@ -3,7 +3,7 @@
 
 datasource db {
   provider     = "mysql"
-  url          = "mysql://4gjfvvca80d9ox5eih02:pscale_pw_GtNoYhbX1hvm6l9rdKFcAOJ8ZsNvMY7DdmueulDRoP3@aws.connect.psdb.cloud/poker?sslaccept=strict"
+  url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
