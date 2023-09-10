@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Session {
+  id          Int      @id @default(autoincrement())
+  sessionName String   @map("session_name") @db.VarChar(150)
+  sessionKey  String   @unique @map("session_key") @db.VarChar(150)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  votingSystemId Int          @map("voting_system_id") @db.Int
+  votingSystem   VotingSystem @relation(fields: [votingSystemId], references: [id])
+
+  users User[]
+
+  @@map("tb_session")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  userName  String   @map("user_name") @db.VarChar(150)
+  userKey   String   @map("user_key") @db.VarChar(150)
+  createdAt DateTime @default(now()) @map("created_at")
+  spectator Boolean  @default(false) @map("spectator") @db.TinyInt
+  userVote  Int?     @map("user_vote") @db.Int
+
+  sessionId Int     @map("session_id") @db.Int
+  session   Session @relation(fields: [sessionId], references: [id])
+
+  @@map("tb_user")
+}
+
+model VotingSystem {
+  id         Int      @id @default(autoincrement())
+  systemName String   @unique @map("system_name") @db.VarChar(150)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  votingValues VotingValues[]
+  sessions     Session[]
+
+  @@map("tb_voting_system")
+}
+
+model VotingValues {
+  id       Int @id @default(autoincrement())
+  intValue Int @map("value") @db.Int
+
+  votingSystemId Int          @map("voting_system_id") @db.Int
+  votingSystem   VotingSystem @relation(fields: [votingSystemId], references: [id])
+
+  @@map("tb_voting_values")
+}
