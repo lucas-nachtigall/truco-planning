@@ -20,7 +20,6 @@ export class SessionService {
         console.log("req ->")
         console.log(req)
         try{
-
             const votingSystem = await prisma.votingSystem.findUnique({
                 where: {
                     id: req.votingSystemId
@@ -39,12 +38,13 @@ export class SessionService {
                         votingSystemId : votingSystem.id
                     }
                 })
+                console.log("Voting System -> ", votingSystem)
+                console.log("newSession -> ", newSession)
                 return this.entityToResponse(votingSystem, newSession);
-
-
             }
             else{
-                return Promise.reject("Voting System not found")
+                console.log("Voting System -> ", votingSystem)
+                throw new AppError("Error creating session")
             }
         }
         catch (error){
